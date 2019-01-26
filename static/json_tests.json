@@ -1,0 +1,24 @@
+{
+  "add_task1":
+  {
+    "ts_title": "TASK 1",
+    "ts_description":"This is the first I create",
+    "ts_status":"opened",
+    "ts_users": ["5c4b31753fa7331d5b362a46"]
+  },
+  "add_task2":
+  {
+    "ts_title": "TASK 2",
+    "ts_description":"This is the first I create",
+    "ts_status":"opened",
+    "ts_users": ["5c4b31753fa7331d5b362a45"]
+  },
+  "edit_task1":
+    {
+      "ts_description":"ANOTHER DESC"
+    },
+  "edit_task2":
+    {
+      "ts_status": "completed"
+    }
+}

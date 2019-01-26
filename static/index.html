@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <title>My To-Do web app</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!--
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+  -->
+  <link rel="stylesheet" type="text/css" href="/index.css">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
+
+  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+  <script src="core.js"></script>
+</head>
+
+<body >
+<div ng-app="angularTodoApp" ng-controller="MainController">
+
+  <div class="box color" align="center">
+    <h3>My To-Do web app</h3>
+  </div>
+  <table style="width:90%" class="table">
+    <tr>
+      <td align="center">
+        <div class="card border-secondary mb-3">
+          <div class="card-header">Opened tasks</div>
+          <div class="card-body text-primary">
+            <div ng-repeat="ts in opened" class="task_border">
+              {{ ts.ts_title }} <br/>
+              <div align="left">
+                {{ ts.ts_description }} <br/>
+              </div>
+              <div>
+                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#show_user_modal" align="right">Show info</a>
+                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#edit_task_modal" align="right">Edit info</a>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent border-success">
+            <a href="#" class="btn btn-link" role="button" data-toggle="modal" data-target="#add_task_opened_modal">Add task</a>
+          </div>
+        </div>
+      </td>
+      <td align="center">
+        <div class="card border-primary mb-3">
+          <div class="card-header">In-Progress tasks</div>
+          <div class="card-body text-primary">
+            <div ng-repeat="ts in in_progress" class="task_border">
+              {{ ts.ts_title }} <br/>
+              <div align="left">
+                {{ ts.ts_description }} <br/>
+              </div>
+              <div>
+                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#show_user_modal" align="right">Show info</a>
+                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#edit_task_modal" align="right">Edit info</a>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent border-success">
+            <a href="#" class="btn btn-link" role="button" data-toggle="modal" data-target="#add_task_in_progress_modal">Add task</a>
+          </div>
+        </div>
+      </td>
+      <td align="center">
+        <div class="card border-success mb-3">
+          <div class="card-header">Completed tasks</div>
+          <div class="card-body text-primary">
+            <div ng-repeat="ts in completed" class="task_border">
+              {{ ts.ts_title }} <br/>
+              <div align="left">
+                {{ ts.ts_description }} <br/>
+              </div>
+              <div>
+                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#show_user_modal" align="right">Show info</a>
+                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#edit_task_modal" align="right">Edit info</a>
+              </div>
+            </div>
+          </div>
+          <div class="card-footer bg-transparent border-success">
+            <a href="#" class="btn btn-link" role="button" data-toggle="modal" data-target="#add_task_completed_modal">Add task</a>
+          </div>
+        </div>
+      </td>
+    </tr>
+    <tr>
+      <td align="center"></td>
+      <td align="center">
+        <div class="card border-warning mb-3">
+          <div class="card-header">Archived tasks</div>
+          <div class="card-body text-primary">
+            <div ng-repeat="ts in archived" class="task_border">
+              {{ ts.ts_title }} <br/>
+              <div align="left">
+                {{ ts.ts_description }} <br/>
+              </div>
+            </div>
+            <div class="card-footer bg-transparent border-success">
+              <a href="#" class="btn btn-link" role="button" data-toggle="modal" data-target="#add_task_archived_modal">Add task</a>
+            </div>
+          </div>
+        </div>
+      </td>
+      <td align="center"></td>
+    </tr>
+  </table>
+
+  <div id="add_task_archived_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" align="center">Add a archived task</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form>
+              <div>
+                Task title:
+                <input type="text" class="form-control input-lg" ng-model="formData.title">
+                <br/>
+                Task description:
+                <input type="text" class="form-control input-lg" ng-model="formData.description">
+                <br/>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveArchivedTask()">Save</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal for opened task-->
+  <div id="add_task_opened_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" align="center">Add a opened task</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form>
+              <div>
+                Task title:
+                <input type="text" class="form-control input-lg" ng-model="formData.title">
+                <br/>
+                Task description:
+                <input type="text" class="form-control input-lg" ng-model="formData.description">
+                <br/>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveOpenedTask()">Save</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!-- Modal for completed task-->
+  <div id="add_task_completed_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" align="center">Add a completed task</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form>
+              <div>
+                Task title:
+                <input type="text" class="form-control input-lg" ng-model="formData.title">
+                <br/>
+                Task description:
+                <input type="text" class="form-control input-lg" ng-model="formData.description">
+                <br/>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveCompTask()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for in progress task-->
+  <div id="add_task_in_progress_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title" align="center">Add a in-progress task</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <form>
+              <div>
+                Task title:
+                <input type="text" class="form-control input-lg" ng-model="formData.title">
+                <br/>
+                Task description:
+                <input type="text" class="form-control input-lg" ng-model="formData.description">
+                <br/>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveInProgTask()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal2 for user info-->
+  <div id="show_user_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveTask(  )">Save</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Modal3  -->
+  <div id="edit_task_modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Modal Header</h4>
+        </div>
+        <div class="modal-body">
+          <p>Some text in the modal.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveTask(  )">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div>
+    <div class="box color2" align="center">
+      <h4>Users</h4>
+    </div>
+    <table style="width:90%" class="table">
+     <tr align="center">
+       <td>
+         <a href="#" class="btn btn-info btn-lg" role="button" data-toggle="modal" data-target="#add_user" align="right">Create User</a>
+         <div id="add_user" class="modal" tabindex="-1" role="dialog">
+           <div class="modal-dialog" role="document">
+             <div class="modal-content">
+               <div class="modal-header">
+                 <h5 class="modal-title">Add an user</h5>
+                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                   <span aria-hidden="true">&times;</span>
+                 </button>
+               </div>
+               <div class="modal-body">
+                 <form>
+                   <div>
+                     Username:
+                     <input type="text" class="form-control input-lg" ng-model="formData.us_name">
+                   </div>
+                 </form>
+
+               </div>
+               <div class="modal-footer">
+                 <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createUser()">Save</button>
+               </div>
+               </div>
+             </div>
+           </div>
+         </div>
+       </td>
+       <td>
+         <div class="card border-dark">
+           <div class="card-header">
+             User list
+           </div>
+           <div class="card-body">
+             <div ng-repeat="us in users" class="task_border">
+               {{ us.us_name }} <br/>
+               <div align="left">
+                 {{ "f" }} <br/>
+               </div>
+             </div>
+           </div>
+         </div>
+       </td>
+     </tr>
+   </table>
+  </div>
+</div>
+
+
+</body>
+</html>
