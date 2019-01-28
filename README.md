@@ -14,6 +14,7 @@ The Mongo database is placed on the database hosting mlab.com.
  * The `models`folder contains the Database models and the code of its construction in MongoDB.
  * The `routes` folder has the routing component of the API.
  * The `static` has the Javascript file of the frond-end part as well as the html file of the web app.
+    - Inside this folder we have the frontend file of the app `core.js`.
  * The `app.js` file is the main file of the API. 
  * The `package.json` file has some properties of the app, such as name, version, dependencies and so on.
 
@@ -23,12 +24,14 @@ First, we install the dependencies in `package.json` by typing the command:
 ``` 
     $ npm install  
 ```
-And deploy the API with:
+And deploy the web with:
 ``` 
     $ nodejs app.js
     API running on port 8888
     Connection to database successful.
 ```
+
+Once above is done, we can go to [`localhost:8888/`](localhost:8888) and interact with the Web app.
 
 ## API routes
 

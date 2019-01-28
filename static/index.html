@@ -5,13 +5,6 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <!--
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
-
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
-  -->
   <link rel="stylesheet" type="text/css" href="/index.css">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.16/angular.min.js"></script>
@@ -28,98 +21,38 @@
   <div class="box color" align="center">
     <h3>My To-Do web app</h3>
   </div>
-  <table style="width:90%" class="table">
+  <table style="width:100%" class="table">
     <tr>
-      <td align="center">
-        <div class="card border-secondary mb-3">
-          <div class="card-header">Opened tasks</div>
-          <div class="card-body text-primary">
-            <div ng-repeat="ts in opened" class="task_border">
+      <td align="center" ng-repeat="tsk in task_panel">
+        <div class="{{ tsk.class_panel }}">
+          <div class="card-header">{{ tsk.title }}</div>
+          <div class="card-body">
+            <div ng-repeat="ts in tsk.myTasks" class="task_border">
               {{ ts.ts_title }} <br/>
               <div align="left">
                 {{ ts.ts_description }} <br/>
               </div>
-              <div>
-                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#show_user_modal" align="right">Show info</a>
-                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#edit_task_modal" align="right">Edit info</a>
+              <div align="right">
+                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#show_user_modal" ng-click="showDetail(ts._id)">Show task</a>
+                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#edit_task_modal" ng-click="showDetail(ts._id)">Edit task</a>
               </div>
             </div>
           </div>
           <div class="card-footer bg-transparent border-success">
-            <a href="#" class="btn btn-link" role="button" data-toggle="modal" data-target="#add_task_opened_modal">Add task</a>
+            <a href="#" class="btn btn-link" role="button" data-toggle="modal" data-target="#add_task_modal" ng-click="setAddTask(tsk.sts)">Add task</a>
           </div>
         </div>
       </td>
-      <td align="center">
-        <div class="card border-primary mb-3">
-          <div class="card-header">In-Progress tasks</div>
-          <div class="card-body text-primary">
-            <div ng-repeat="ts in in_progress" class="task_border">
-              {{ ts.ts_title }} <br/>
-              <div align="left">
-                {{ ts.ts_description }} <br/>
-              </div>
-              <div>
-                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#show_user_modal" align="right">Show info</a>
-                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#edit_task_modal" align="right">Edit info</a>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer bg-transparent border-success">
-            <a href="#" class="btn btn-link" role="button" data-toggle="modal" data-target="#add_task_in_progress_modal">Add task</a>
-          </div>
-        </div>
-      </td>
-      <td align="center">
-        <div class="card border-success mb-3">
-          <div class="card-header">Completed tasks</div>
-          <div class="card-body text-primary">
-            <div ng-repeat="ts in completed" class="task_border">
-              {{ ts.ts_title }} <br/>
-              <div align="left">
-                {{ ts.ts_description }} <br/>
-              </div>
-              <div>
-                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#show_user_modal" align="right">Show info</a>
-                <a href="#" class="btn btn-primary btn-sm" role="button" data-toggle="modal" data-target="#edit_task_modal" align="right">Edit info</a>
-              </div>
-            </div>
-          </div>
-          <div class="card-footer bg-transparent border-success">
-            <a href="#" class="btn btn-link" role="button" data-toggle="modal" data-target="#add_task_completed_modal">Add task</a>
-          </div>
-        </div>
-      </td>
-    </tr>
-    <tr>
-      <td align="center"></td>
-      <td align="center">
-        <div class="card border-warning mb-3">
-          <div class="card-header">Archived tasks</div>
-          <div class="card-body text-primary">
-            <div ng-repeat="ts in archived" class="task_border">
-              {{ ts.ts_title }} <br/>
-              <div align="left">
-                {{ ts.ts_description }} <br/>
-              </div>
-            </div>
-            <div class="card-footer bg-transparent border-success">
-              <a href="#" class="btn btn-link" role="button" data-toggle="modal" data-target="#add_task_archived_modal">Add task</a>
-            </div>
-          </div>
-        </div>
-      </td>
-      <td align="center"></td>
     </tr>
   </table>
 
-  <div id="add_task_archived_modal" class="modal fade" role="dialog">
+  <!-- Modal for add a task-->
+  <div id="add_task_modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
-
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title" align="center">Add a archived task</h4>
+          <h4 class="modal-title" align="center">{{ addmsg }}</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
         <div class="modal-body">
@@ -132,152 +65,78 @@
                 Task description:
                 <input type="text" class="form-control input-lg" ng-model="formData.description">
                 <br/>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveArchivedTask()">Save</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- Modal for opened task-->
-  <div id="add_task_opened_modal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" align="center">Add a opened task</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div>
-            <form>
-              <div>
-                Task title:
-                <input type="text" class="form-control input-lg" ng-model="formData.title">
-                <br/>
-                Task description:
-                <input type="text" class="form-control input-lg" ng-model="formData.description">
+                Add users:
+                <select ng-model="formData.users" name="user">
+                  <option ng-repeat="u in users" value="{{u._id.toString()}}">{{u.us_name}}</option>
+                </select>
                 <br/>
               </div>
             </form>
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveOpenedTask()">Save</button>
-        </div>
-      </div>
-
-    </div>
-  </div>
-  <!-- Modal for completed task-->
-  <div id="add_task_completed_modal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" align="center">Add a completed task</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div>
-            <form>
-              <div>
-                Task title:
-                <input type="text" class="form-control input-lg" ng-model="formData.title">
-                <br/>
-                Task description:
-                <input type="text" class="form-control input-lg" ng-model="formData.description">
-                <br/>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="saveCompTask()">Save</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveTask()">Save</button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal for in progress task-->
-  <div id="add_task_in_progress_modal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
-
-      <!-- Modal content-->
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title" align="center">Add a in-progress task</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <div class="modal-body">
-          <div>
-            <form>
-              <div>
-                Task title:
-                <input type="text" class="form-control input-lg" ng-model="formData.title">
-                <br/>
-                Task description:
-                <input type="text" class="form-control input-lg" ng-model="formData.description">
-                <br/>
-              </div>
-            </form>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveInProgTask()">Save</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal2 for user info-->
+  <!-- Modal for user info-->
   <div id="show_user_modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
-
-      <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
+          <h4 class="modal-title">Task information</h4>
+          <button type="button" class="close" data-dismiss="modal" ng-click="cleanTaskInfo()">&times;</button>
         </div>
         <div class="modal-body">
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveTask(  )">Save</button>
+          Task title: {{ taskInfo.ts_title }} <br/>
+          Task description: {{ taskInfo.ts_description }} <br/>
+          Task status: {{ taskInfo.ts_status }} <br/>
+          Task users:
+          <ul>
+            <li  ng-repeat="unm in taskInfo.ts_users">{{ unm }}</li>
+          </ul>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- Modal3  -->
+  <!-- Modal for edit task -->
   <div id="edit_task_modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
-
-      <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
+          <h4 class="modal-title">Edit task</h4>
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Modal Header</h4>
         </div>
         <div class="modal-body">
-          <p>Some text in the modal.</p>
+          <form>
+            Task title: {{ taskInfo.ts_title }} <br/>
+            <label for="input_title">New title: </label>
+            <input id="input_title" type="text" class="form.control input-lg" ng-model="formData.title"> <br/> <br/>
+
+            Task description: {{ taskInfo.ts_description }} <br/>
+            <label for="input_desc">New description</label>
+            <input id="input_desc" type="text" class="form.control input-lg" ng-model="formData.description"> <br/> <br/>
+
+            Task status: {{ taskInfo.ts_status }} <br/>
+            <label for="input_st">New status</label>
+            <select id="input_st" ng-model="formData.status" name="status">
+              <option ng-repeat="val in allStatus" value="{{ val.value }}">{{ val.name }}</option>
+            </select>
+          </form>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="saveTask(  )">Close</button>
+          <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="editTask(taskInfo._id)">Close</button>
         </div>
       </div>
 
     </div>
   </div>
 
+  <!-- User section -->
   <div>
     <div class="box color2" align="center">
       <h4>Users</h4>
@@ -298,19 +157,18 @@
                <div class="modal-body">
                  <form>
                    <div>
-                     Username:
-                     <input type="text" class="form-control input-lg" ng-model="formData.us_name">
+                     <label for="input_usnm">Username: </label>
+                     <input id="input_usnm" type="text" class="form-control input-lg" ng-model="formData.us_name">
                    </div>
                  </form>
 
                </div>
                <div class="modal-footer">
-                 <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="createUser()">Save</button>
+                 <button type="button" class="btn btn-primary" data-dismiss="modal" ng-click="addUser()">Save</button>
                </div>
                </div>
              </div>
            </div>
-         </div>
        </td>
        <td>
          <div class="card border-dark">
@@ -320,9 +178,6 @@
            <div class="card-body">
              <div ng-repeat="us in users" class="task_border">
                {{ us.us_name }} <br/>
-               <div align="left">
-                 {{ "f" }} <br/>
-               </div>
              </div>
            </div>
          </div>
@@ -331,7 +186,5 @@
    </table>
   </div>
 </div>
-
-
 </body>
 </html>

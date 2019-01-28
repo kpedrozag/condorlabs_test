@@ -3,7 +3,7 @@ var Task = mongoose.model("Task");
 var User = mongoose.model("User");
 const _ = require("lodash");
 
-var log_ctrl = require('./log');
+//var // log_ctrl = require('./log');
 
 // Req. 1a: Create Task. Method: POST
 exports.createTask = function(request, response){
@@ -21,7 +21,7 @@ exports.createTask = function(request, response){
     task.save(function (error, task) {
         if(error) return response.send(500, error.message);
 
-        log_ctrl.SaveLog(task, task, 'CREATE_TASK');
+        // log_ctrl.SaveLog(task, task, 'CREATE_TASK');
 
         // If the task was saved, it is mandatory to update the assigned tasks field of each user
         for (let us of task.ts_users){
@@ -58,9 +58,10 @@ exports.updateTask = function (request, response){
     Task.findById(request.params.ts_id, function (error, task) {
         if(error) return response.send(500, error.message);
 
-        const ov = task
+        const ov = task;
 
-        // We check if we got a new description. If it does, we assign it. The same procedure with the status of the task
+        // We check if we got a new value. If it does, we assign it.
+        if(request.body.ts_title) task.ts_title = (task.ts_title === request.body.ts_title)?task.ts_title:request.body.ts_title;
         if(request.body.ts_description) task.ts_description = (task.ts_description === request.body.ts_description)?task.ts_description:request.body.ts_description;
         if(request.body.ts_status) task.ts_status = (task.ts_status === request.body.ts_status)?task.ts_status:request.body.ts_status;
 
@@ -68,7 +69,7 @@ exports.updateTask = function (request, response){
         task.save(function (error, task) {
             if(error) return response.send(500, error.message);
 
-            log_ctrl.SaveLog(ov, task, 'EDIT_TASK');
+            // log_ctrl.SaveLog(ov, task, 'EDIT_TASK');
 
             console.log("PUT /task/{ts_id}");
             response.status(200).jsonp(task);
@@ -128,30 +129,33 @@ exports.TaskToUser = function (request, response) {
         User.findById(request.params.us_id, function (error_u, user) {
             if(error_u) return response.send(500).send(error_u.message);
 
-            // If both exist, update the users assigned to the task
-            task.ts_users.push(user.id);
+            // If both exist, update the users assigned to the task. Also we checked if the user already has the task
+            if(task.ts_users.indexOf(user.id) === -1){
+                task.ts_users.push(user.id);
 
-            // And update the assigned task to the users. Check if it is the first assigned task
-            if(user.us_tasks){
-                user.us_tasks.push(task.id);
+                // And update the assigned task to the users.
+                if(user.us_tasks){
+                    user.us_tasks.push(task.id);
+                }
+                else {
+                    var ar = [];
+                    ar.push(task.id);
+                    user.us_tasks = ar.concat();
+                }
+
+                // Commit the changes of both Objects
+                user.save(function (error) {
+                    if(error) return response.send(500, error.message);
+                });
+                task.save(function (error, task) {
+                    if(error) return response.send(500, error.message);
+
+                    // log_ctrl.SaveLog(ov, task, 'CHANGE_USER');
+                });
             }
-            else {
-                var ar = [];
-                ar.push(task.id);
-                user.us_tasks = ar.concat();
+            else{
+                return response.send(400).send("User and task are already linked");
             }
-
-            // Commit the changes of both Objects
-            user.save(function (error) {
-                if(error) return response.send(500, error.message);
-            });
-            task.save(function (error, task) {
-                if(error) return response.send(500, error.message);
-
-                log_ctrl.SaveLog(ov, task, 'CHANGE_USER');
-            });
-
-
             console.log("PUT /task/{ts_id}/{us_id}");
             response.status(200).jsonp(task);
         });
@@ -194,7 +198,7 @@ exports.UserFromTask = function (request, response) {
                    task.save(function (error, task) {
                        if(error) return response.send(500, error.message);
 
-                       log_ctrl.SaveLog(ov, task, 'CHANGE_USER');
+                       // log_ctrl.SaveLog(ov, task, 'CHANGE_USER');
                    });
 
                    console.log("DELETE /task/{ts_id}/{us_id}");

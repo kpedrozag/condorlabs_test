@@ -39,7 +39,7 @@ mongoose.connect(url, {useNewUrlParser: true}, function (error, response) {
 
 // ---------------------------------------------------------
 
-var log_model = require('./models/log')(mongoose);
+// var log_model = require('./models/log')(mongoose);
 
 // Load of the controllers and db models.
 var user_model = require("./models/user")(mongoose),
